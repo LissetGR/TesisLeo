@@ -1,0 +1,10 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.fondo{
+    background-image: url("../../public/build/assets/surco.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+}
