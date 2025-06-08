@@ -29,33 +29,34 @@
                             <tbody>
                                 <!-- row 1 -->
                                 @foreach ($productos as $producto)
-                                    <tr>
-                                        <th>
-                                            <label>
-                                                <input type="checkbox" class="checkbox" />
-                                            </label>
-                                        </th>
-                                        <td>
-                                            <div class="flex items-center gap-3">
-                                                <div class="avatar">
-                                                    <div class="mask mask-squircle h-12 w-12">
-                                                        <img src="{{ asset('storage/' . $producto->photo) }}"
-                                                            alt="Imagen del producto">
-                                                    </div>
-                                                </div>
-                                                <div>
-                                                    <div class="font-bold">{{ $producto->nombre }}</div>
-                                                    <div class="text-sm opacity-50">{{ $producto->u_medida }}</div>
+                                <tr>
+                                    <td>
+                                        <div class="flex items-center gap-3">
+                                            <div class="avatar">
+                                                <div class="mask mask-squircle h-12 w-12">
+                                                    <img src="{{ asset('storage/' . $producto->photo) }}" alt="Imagen del producto">
                                                 </div>
                                             </div>
-                                        </td>
-                                        <th>
-                                            <a href="{{ route('productos.edit', $producto) }}"
-                                                class="btn btn-neutral btn-xs">Editar</a>
-                                            <button x-data="{{ $producto }}" class="btn btn-warning btn-xs"
-                                                x-on:click.prevent="$dispatch('open-modal', 'confirm-deletion')">Eliminar</button>
-                                        </th>
-                                @endforeach
+                                            <div>
+                                                <div class="font-bold">{{ $producto->nombre }}</div>
+                                                <div class="text-sm opacity-50">{{ $producto->u_medida }}</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="flex gap-2">
+                                        <!-- Botón Editar -->
+                                        <a href="{{ route('productos.edit', $producto->id) }}" class="btn btn-neutral btn-xs">Editar</a>
+
+                                        <!-- Formulario de Eliminación -->
+                                        <form action="{{ route('productos.destroy', $producto->id) }}" method="POST"
+                                            onsubmit="return confirm('¿Seguro que deseas eliminar este producto?');">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-error btn-xs">Eliminar</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            @endforeach
                                 </tr>
 
                             </tbody>
@@ -79,4 +80,4 @@
 </x-app-layout>
 
 
-<x-confirm-deletation :elemento="'productos'" :data="$producto"></x-confirm-deletation>
+

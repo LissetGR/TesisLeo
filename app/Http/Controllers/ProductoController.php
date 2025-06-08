@@ -48,12 +48,13 @@ class ProductoController extends Controller
         }else{
             $producto->update($request->all());
         }
-    
+
        return redirect()->route('productos.index', ['productos'=>$producto]);
     }
 
-    public function destroy(Producto $producto){
-      $producto->delete();
+    public function destroy($id){
+        $producto = Producto::findOrFail($id);
+        $producto->delete();
       return redirect()->route('productos.index');
     }
     public function index(){

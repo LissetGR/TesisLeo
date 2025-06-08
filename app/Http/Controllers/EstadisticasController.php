@@ -22,12 +22,12 @@ class EstadisticasController extends Controller
         return view('estadisticas.estadisticas');
     }
 
-    // public function importeAnual(string $anno){
-    //   $importe = 0;
-    //   foreach($this->$meses as $mes){
-    //     $importe += $this->importeMensual($mes, $anno);
-    //   }
-    //   return $importe;
+   // public function importeAnual(string $anno){
+     // $importe = 0;
+      //foreach($this->$meses as $mes){
+       // $importe += $this->importeMensual($mes, $anno);
+      //}
+      //return $importe;
     // }
 
     public function realMensual(string $mes, string $anno){

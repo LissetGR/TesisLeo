@@ -22,8 +22,8 @@ class StoreReal extends FormRequest
     public function rules(): array
     {
         return [
-            'cantidad'=> 'integer|required',
-            'precio'=> 'decimal:2|required',
+            'cantidad'=> 'array|required',
+            'precio'=> 'array|required',
             'mes'=> ['string','required',
                     function ($attribute, $value, $fail) {
                         $allowedValues = ['Enero','Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre','Diciembre'];

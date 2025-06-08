@@ -2,13 +2,17 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Real extends Model
 {
-    protected $fillable= ['plans_id', 'cantidad', 'precio', 'mes', 'anno'];
+    use HasFactory;
 
-    public function plans (){
-        return $this->belongsTo(Plan::class, 'plans_id');
+    protected $fillable = ['mes', 'anno', 'producto_id', 'cantidad', 'precio'];
+
+    public function producto()
+    {
+        return $this->belongsTo(Producto::class);
     }
 }

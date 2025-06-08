@@ -22,8 +22,8 @@ class StorePlan extends FormRequest
     public function rules(): array
     {
         return [
-            'cantidad' => 'required|integer|min:1',
-            'precio' => 'required|numeric|min:0',
+            'cantidad' => 'required|array|min:1',
+            'precio' => 'required|array|min:0',
             'mes' => [
                 'required',
                 'string',

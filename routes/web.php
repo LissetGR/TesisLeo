@@ -36,6 +36,9 @@ Route::get('/porcentual', [EstadisticasController::class, 'realPorcentualAnual']
 
 Route::resource('real', RealController::class);
 Route::resource('plan', PlanController::class);
+Route::delete('/plan/{plan}', [PlanController::class, 'destroy'])->name('plan.destroy');
+Route::get('/plan/{plan}/edit', [PlanController::class, 'edit'])->name('plan.edit');
+Route::put('/plan/{plan}', [PlanController::class, 'update'])->name('plan.update');
 
 
 require __DIR__.'/auth.php';

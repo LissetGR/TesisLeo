@@ -7,10 +7,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Producto extends Model
 {
-    protected $fillable= ['nombre', 'u_medida', 'photo', 'productos_id'];
+    protected $fillable= ['nombre', 'u_medida', 'photo', 'id'];
 
     public function plans(){
-        return $this->hasMany(Plan::class, 'productos_id');
+        return $this->hasMany(Plan::class, 'id');
+    }
+    public function reals()
+    {
+        return $this->hasMany(Real::class);
     }
 
 }

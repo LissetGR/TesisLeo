@@ -1,25 +1,15 @@
 @php
     $meses = [
-        'Enero',
-        'Febrero',
-        'Marzo',
-        'Abril',
-        'Mayo',
-        'Junio',
-        'Julio',
-        'Agosto',
-        'Septiembre',
-        'Octubre',
-        'Noviembre',
-        'Diciembre',
+        'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+        'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre',
     ];
-    $bandera = false;
 @endphp
+
 <x-app-layout>
     <x-slot name="header">
         <div class="flex justify-between align-middle">
-            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight ">
-                {{ __('Crear plan') }}
+            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+                {{ __('Crear Real') }}
             </h2>
         </div>
     </x-slot>
@@ -27,60 +17,140 @@
     <div class="py-12">
         <div class="max-w-6xl mx-auto sm:px-6 lg:px-8">
             <div class="p-6 bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <h1 class="text-center font-semibold text-xl text-gray-800 leading-tight">Introduzca los datos del real
+                <h1 class="text-center font-semibold text-xl text-gray-800 leading-tight">
+                    Introduzca los datos del Real
                 </h1>
+
                 <div class="flex justify-center ml-3 mt-6">
-                    <form action="{{ route('real.store') }}" method="POST" enctype="multipart/form-data">
+                    <form id="real-form" action="{{ route('real.store') }}" method="POST">
                         @csrf
-                        <div>
-                            <label class="mr-10" for="mes">Mes</label>
-                            <select class="select select-primary w-full max-w-xs" name="mes" id="mes">
-                                <option required selected>Seleccione el mes correspondiente</option>
-                                @foreach ($meses as $mes)
-                                    <option value="{{Str::lower($mes)}}">{{ $mes }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="mt-6 mr-10">
-                            <label for="anno">Año</label>
-                            <select class="select select-primary w-full max-w-xs" name="anno" id="anno">
-                                <option  required selected>{{$anno}}</option>
-                                @for ($i = $anno; $i > $anno - 20; $i--)
-                                    <option value="{{$i}}">{{$i}}</option>
-                                @endfor
-                            </select>
-                        </div>
-                        <div>
-                            <div class="mt-6">
-                                <label for="productos_id">Productos</label>
-                                <select class="select select-primary w-full max-w-xs" name="productos_id" id="productos_id" >
-                                    <option required selected >Seleccione el producto correspondiente</option>
-                                    @foreach ($productos as $producto)
-                                        <option  value="{{$producto->id}}">{{$producto->nombre}}</option>
+
+                        {{-- Selección de Mes y Año --}}
+                        <div class="flex gap-10">
+                            <div>
+                                <label for="mes">Mes</label>
+                                <select class="select select-primary w-full max-w-xs" name="mes" id="mes" required>
+                                    @foreach ($meses as $mes)
+                                        <option value="{{ strtolower($mes) }}">{{ $mes }}</option>
                                     @endforeach
                                 </select>
-                                <x-icono-agregar></x-icono-agregar>
                             </div>
-                            <div class="mt-6">
-                                <label for="cantidad">Cantidad</label>
-                                <input type="number" name="cantidad" id="cantidad" required placeholder="Escribe aquí"
-                                    class="input input-bordered input-primary w-full max-w-xs" />
-                            </div>
-                            <div class="mt-6">
-                                <label class="mr-6" for="precio">Precio</label>
-                                <input type="decimal" name="precio" id="precio" required placeholder="Escribe aquí"
-                                    class="input input-bordered input-primary w-full max-w-xs" />
+
+                            <div>
+                                <label for="anno">Año</label>
+                                <select class="select select-primary w-full max-w-xs" name="anno" id="anno" required>
+                                    @for ($i = now()->year; $i > now()->year - 20; $i--)
+                                        <option value="{{ $i }}">{{ $i }}</option>
+                                    @endfor
+                                </select>
                             </div>
                         </div>
+
+                        {{-- Sección de Productos Dinámicos --}}
+                        <div class="mt-6">
+                            <h2 class="font-semibold text-lg">Productos</h2>
+                            <div id="productos-container">
+                                <div class="producto-item flex gap-4 mt-4">
+                                    <select class="select select-primary w-full max-w-xs" name="producto_id[]" required>
+                                        <option value="">Seleccione el producto</option>
+                                        @foreach ($productos as $producto)
+                                            <option value="{{ $producto->id }}">{{ $producto->nombre }}</option>
+                                        @endforeach
+                                    </select>
+
+                                    <input type="number" name="cantidad[]" placeholder="Cantidad" required
+                                        class="input input-bordered input-primary w-28" />
+
+                                    <input type="number" name="precio[]" placeholder="Precio" required
+                                        class="input input-bordered input-primary w-28" />
+
+                                    <button type="button" class="btn btn-error btn-xs remove-product">Eliminar</button>
+                                </div>
+                            </div>
+
+                            <button type="button" id="add-product" class="btn btn-secondary mt-4">Agregar Producto</button>
+                        </div>
+
                         <div class="flex justify-center mt-10">
                             <button type="submit" class="btn btn-primary mr-6">Aceptar</button>
                             <a href="{{ route('real.index') }}" class="btn btn-glass">Cancelar</a>
                         </div>
                     </form>
                 </div>
-
             </div>
         </div>
     </div>
+
+    {{-- Script para manejar los productos dinámicos --}}
+    <script>
+        document.getElementById('add-product').addEventListener('click', function () {
+            let container = document.getElementById('productos-container');
+            let newProduct = document.createElement('div');
+            newProduct.classList.add('producto-item', 'flex', 'gap-4', 'mt-4');
+            newProduct.innerHTML = `
+                <select class="select select-primary w-full max-w-xs" name="producto_id[]" required>
+                    <option value="">Seleccione el producto</option>
+                    @foreach ($productos as $producto)
+                        <option value="{{ $producto->id }}">{{ $producto->nombre }}</option>
+                    @endforeach
+                </select>
+
+                <input type="number" name="cantidad[]" placeholder="Cantidad" required
+                    class="input input-bordered input-primary w-28" />
+
+                <input type="number" name="precio[]" placeholder="Precio" required
+                    class="input input-bordered input-primary w-28" />
+
+                <button type="button" class="btn btn-error btn-xs remove-product">Eliminar</button>
+            `;
+            container.appendChild(newProduct);
+        });
+
+        document.addEventListener('click', function (event) {
+            if (event.target.classList.contains('remove-product')) {
+                event.target.parentElement.remove();
+            }
+        });
+
+        // Enviar el formulario con la estructura correcta
+        document.getElementById('real-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            let form = event.target;
+            let productos = [];
+
+            let mes = document.getElementById('mes').value;
+            let anno = document.getElementById('anno').value;
+
+            document.querySelectorAll('.producto-item').forEach(item => {
+                let productoId = item.querySelector('select[name="producto_id[]"]').value;
+                let cantidad = item.querySelector('input[name="cantidad[]"]').value;
+                let precio = item.querySelector('input[name="precio[]"]').value;
+
+                if (productoId && cantidad && precio) {
+                    productos.push({
+                        productos_id: productoId,
+                        cantidad: cantidad,
+                        precio: precio,
+                        mes: mes,
+                        anno: anno
+                    });
+                }
+            });
+
+            if (productos.length === 0) {
+                alert("Debes agregar al menos un producto.");
+                return;
+            }
+
+            let input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'productos';
+            input.value = JSON.stringify(productos);
+            form.appendChild(input);
+
+            form.submit();
+        });
+    </script>
 
 </x-app-layout>
