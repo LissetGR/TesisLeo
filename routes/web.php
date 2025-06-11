@@ -20,10 +20,9 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::resource('productos', ProductoController::class);
-
-
 });
 
+Route::get('/estadisticas/exportar', [EstadisticasController::class, 'export'])->name('estadisticas.exportar');
 Route::get('/estadisticas', function(){
    return view('estadisticas.estadisticas');
 });

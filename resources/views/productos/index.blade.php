@@ -6,7 +6,6 @@
             </h2>
             <div>
                 <a href="productos/create" class="btn btn-m btn-primary">+</a>
-                <x-search></x-search>
             </div>
         </div>
     </x-slot>
@@ -33,8 +32,11 @@
                                     <td>
                                         <div class="flex items-center gap-3">
                                             <div class="avatar">
-                                                <div class="mask mask-squircle h-12 w-12">
-                                                    <img src="{{ asset('storage/' . $producto->photo) }}" alt="Imagen del producto">
+                                            <div class="mask mask-squircle h-12 w-12">
+                                                <img src="{{ $producto->photo ? asset('storage/' . $producto->photo) : asset('images/productos.jpg') }}"
+                                                        onerror="this.onerror=null;this.src='{{ asset('images/productos.jpg') }}';"
+                                                        alt="Imagen del producto"
+                                                        class="object-cover w-full h-full">
                                                 </div>
                                             </div>
                                             <div>

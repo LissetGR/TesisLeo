@@ -137,20 +137,25 @@ class PlanController extends Controller
       $plan->delete();
       return redirect()->route('plan.index');
     }
-    public function index()
-{
-        $current_year = Carbon::now()->year;
-        $plan = Producto::with(['plans' => function($query) use ($current_year) {
-            $query->where('anno', $current_year);
-                  }])->get();
-                 
-          $totalesPorMes = $this->getTotalesPorMes($current_year);
-          $totalesAnuales = $this->getTotalesAnuales($current_year);
-        return view ('plan.index', [
-            'plan'=> $plan,
+    
+    public function index(Request $request)
+    {
+        // Obtener el año de la query string o usar el año actual por defecto
+        $year = $request->input('year', Carbon::now()->year);
+    
+        $plan = Producto::with(['plans' => function($query) use ($year) {
+            $query->where('anno', $year);
+        }])->get();
+    
+        $totalesPorMes = $this->getTotalesPorMes($year);
+        $totalesAnuales = $this->getTotalesAnuales($year);
+    
+        return view('plan.index', [
+            'plan' => $plan,
             'totalesPorMes' => $totalesPorMes,
-            'totalesAnuales' => $totalesAnuales
-
-    ]);
-}
+            'totalesAnuales' => $totalesAnuales,
+            'year' => $year,  // Pasamos el año para el select en la vista
+        ]);
+    }
+    
 }

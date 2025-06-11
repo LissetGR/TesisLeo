@@ -12,9 +12,27 @@
             <h2 class="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
                 {{ __('Real') }}
             </h2>
-            <div>
+            <div class="flex items-center gap-4">
                 <a href="real/create" class="btn btn-m btn-primary">+</a>
-                <x-search></x-search>
+                <form method="GET" action="{{ route('real.index') }}" class="flex items-center gap-4">
+                    <!-- Año -->
+                    <div class="flex flex-col">
+                        <!-- <label for="year" class="font-semibold mb-1">Año:</label> -->
+                        <select name="year" id="year" onchange="this.form.submit()" class="input input-bordered w-32">
+                            @php
+                                $currentYear = date('Y');
+                                $startYear = $currentYear - 5;
+                            @endphp
+                            @for ($y = $currentYear; $y >= $startYear; $y--)
+                                <option value="{{ $y }}" @if(isset($year) && $year == $y) selected @endif>{{ $y }}</option>
+                            @endfor
+                        </select>
+                    </div>
+
+                    <noscript>
+                        <button type="submit" class="btn btn-primary mt-6">Filtrar</button>
+                    </noscript>
+                </form>
             </div>
         </div>
     </x-slot>
@@ -60,7 +78,10 @@
                                         <div class="flex items-center gap-3">
                                             <div class="avatar">
                                                 <div class="w-12 h-12 mask mask-squircle">
-                                                    <img src="{{ asset('storage/' . $r->photo) }}" alt="Imagen del producto">
+                                                      <img src="{{ $r->photo ? asset('storage/' . $r->photo) : asset('images/productos.jpg') }}"
+                                                        onerror="this.onerror=null;this.src='{{ asset('images/productos.jpg') }}';"
+                                                        alt="Imagen del producto"
+                                                        class="object-cover w-full h-full">
                                                 </div>
                                             </div>
                                             <div>

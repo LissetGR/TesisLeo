@@ -9,10 +9,10 @@ class Real extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['mes', 'anno', 'producto_id', 'cantidad', 'precio'];
+    protected $fillable = ['mes', 'anno', 'productos_id', 'cantidad', 'precio'];
 
-    public function producto()
+    public function productos()
     {
-        return $this->belongsTo(Producto::class);
+        return $this->belongsTo(Producto::class,'productos_id');
     }
 }

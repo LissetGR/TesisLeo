@@ -4,6 +4,7 @@
         'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
         'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
     ];
+    
 @endphp
 
 <x-app-layout>
@@ -12,9 +13,28 @@
             <h2 class="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
                 {{ __('Plan') }}
             </h2>
-            <div>
+            <div class="flex items-center gap-4">
                 <a href="plan/create" class="btn btn-m btn-primary">+</a>
-                <x-search></x-search>
+
+                <form method="GET" action="{{ route('plan.index') }}" class="flex items-center gap-4">
+                    <!-- Año -->
+                    <div class="flex flex-col">
+                        <!-- <label for="year" class="font-semibold mb-1">Año:</label> -->
+                        <select name="year" id="year" onchange="this.form.submit()" class="input input-bordered w-32">
+                            @php
+                                $currentYear = date('Y');
+                                $startYear = $currentYear - 5;
+                            @endphp
+                            @for ($y = $currentYear; $y >= $startYear; $y--)
+                                <option value="{{ $y }}" @if(isset($year) && $year == $y) selected @endif>{{ $y }}</option>
+                            @endfor
+                        </select>
+                    </div>
+
+                    <noscript>
+                        <button type="submit" class="btn btn-primary mt-6">Filtrar</button>
+                    </noscript>
+                </form>
             </div>
         </div>
     </x-slot>
@@ -60,7 +80,10 @@
                                         <div class="flex items-center gap-3">
                                             <div class="avatar">
                                                 <div class="w-12 h-12 mask mask-squircle">
-                                                    <img src="{{ asset('storage/' . $p->photo) }}" alt="Imagen del producto">
+                                                <img src="{{ $p->photo ? asset('storage/' . $p->photo) : asset('images/productos.jpg') }}"
+                                                        onerror="this.onerror=null;this.src='{{ asset('images/productos.jpg') }}';"
+                                                        alt="Imagen del producto"
+                                                        class="object-cover w-full h-full">
                                                 </div>
                                             </div>
                                             <div>
@@ -69,7 +92,7 @@
                                             </div>
                                         </div>
                                     </td>
-                                    <td>
+                                    <td></td> <!-- Este td vacío queda si es parte del diseño -->
 
                                     @foreach ($meses as $mes)
                                         @php
@@ -80,7 +103,8 @@
                                                 <div class="indicator">
                                                     <!-- Formulario de Eliminar -->
                                                     <form action="{{ route('plan.destroy', $planDelMes->id) }}" method="POST" onsubmit="return confirm('¿Estás seguro?');">
-                                                        @csrf @method('DELETE')
+                                                        @csrf 
+                                                        @method('DELETE')
                                                         <button type="submit" title="Eliminar" class="indicator-item badge btn-circle bg-red-600 hover:bg-red-700 p-0 w-4 h-4 text-white text-[8px] leading-none">
                                                             <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                                                 <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
@@ -138,7 +162,8 @@
                         <div class="w-64 p-4 bg-white rounded-lg shadow-lg">
                             <h2 class="mb-3 text-xl font-semibold">Editar Plan</h2>
                             <form action="{{ route('plan.update', $planDelMes->id) }}" method="POST">
-                                @csrf @method('PUT')
+                                @csrf 
+                                @method('PUT')
                                 <div class="mb-3">
                                     <label for="cantidad" class="block text-sm font-medium text-gray-700">Cantidad</label>
                                     <input type="number" id="cantidad" name="cantidad" value="{{ $planDelMes->cantidad }}"

@@ -51,7 +51,7 @@
                             <h2 class="font-semibold text-lg">Productos</h2>
                             <div id="productos-container">
                                 <div class="producto-item flex gap-4 mt-4">
-                                    <select class="select select-primary w-full max-w-xs" name="producto_id[]" required>
+                                    <select class="select select-primary w-full max-w-xs" name="productos_id[]" required>
                                         <option value="">Seleccione el producto</option>
                                         @foreach ($productos as $producto)
                                             <option value="{{ $producto->id }}">{{ $producto->nombre }}</option>
@@ -88,7 +88,7 @@
             let newProduct = document.createElement('div');
             newProduct.classList.add('producto-item', 'flex', 'gap-4', 'mt-4');
             newProduct.innerHTML = `
-                <select class="select select-primary w-full max-w-xs" name="producto_id[]" required>
+                <select class="select select-primary w-full max-w-xs" name="productos_id[]" required>
                     <option value="">Seleccione el producto</option>
                     @foreach ($productos as $producto)
                         <option value="{{ $producto->id }}">{{ $producto->nombre }}</option>
@@ -123,7 +123,7 @@
             let anno = document.getElementById('anno').value;
 
             document.querySelectorAll('.producto-item').forEach(item => {
-                let productoId = item.querySelector('select[name="producto_id[]"]').value;
+                let productoId = item.querySelector('select[name="productos_id[]"]').value;
                 let cantidad = item.querySelector('input[name="cantidad[]"]').value;
                 let precio = item.querySelector('input[name="precio[]"]').value;
 

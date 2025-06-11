@@ -35,7 +35,7 @@ class RealController extends Controller
                     // Verificar si ya existe un real para el mismo mes, año y producto
                     $existingReal = Real::where('mes', $producto['mes'])
                                         ->where('anno', $producto['anno'])
-                                        ->where('producto_id', $producto['productos_id'])
+                                        ->where('productos_id', $producto['productos_id'])
                                         ->first();
 
                     if ($existingReal) {
@@ -49,7 +49,7 @@ class RealController extends Controller
                         Real::create([
                             'mes' => $producto['mes'],
                             'anno' => $producto['anno'],
-                            'producto_id' => $producto['productos_id'],
+                            'productos_id' => $producto['productos_id'],
                             'cantidad' => $producto['cantidad'],
                             'precio' => $producto['precio']
                         ]);
@@ -58,7 +58,7 @@ class RealController extends Controller
 
                 return redirect()->route('real.index')->with('success', 'Real creado o actualizado con éxito.');
             } else {
-                return back()->withErrors(['producto' => 'Los productos no se enviaron correctamente.']);
+                return back()->withErrors(['productos' => 'Los productos no se enviaron correctamente.']);
             }
         } else {
             return back()->withErrors(['productos' => 'No se recibieron productos.']);
@@ -128,19 +128,22 @@ class RealController extends Controller
 
     return $total;
 }
-    public function index()
+    public function index(Request $request)
     {
-        $currentYear = Carbon::now()->year;
-        $real = Producto::with(['reals' => function($query) use ($currentYear) {
-            $query->where('anno', $currentYear);
-                  }])->get();
-            $totalesPorMes = $this->getTotalesPorMes($currentYear);
-            $totalesAnuales = $this->getTotalesAnuales($currentYear);
-     
+        $year = $request->query('year', Carbon::now()->year);
+
+        $real = Producto::with(['reals' => function($query) use ($year) {
+            $query->where('anno', $year);
+        }])->get();
+    
+        $totalesPorMes = $this->getTotalesPorMes($year);
+        $totalesAnuales = $this->getTotalesAnuales($year);
+    
         return view('real.index', [
             'real' => $real,
             'totalesPorMes' => $totalesPorMes,
-            'totalesAnuales' => $totalesAnuales
+            'totalesAnuales' => $totalesAnuales,
+            'year' => $year,
         ]);
     }
 
