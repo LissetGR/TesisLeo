@@ -45,7 +45,7 @@ class EstadisticasController extends Controller
     {
         return Real::where('anno', $anno)
             ->where('mes', $mes)
-            ->sum(\DB::raw('cantidad'));
+            ->sum(\DB::raw('cantidad * precio'));
     }
     private function calcularImporte(string $mes, int $anno): float
     {
@@ -59,7 +59,7 @@ class EstadisticasController extends Controller
     {
         return Plan::where('anno', $anno)
             ->where('mes', $mes)
-            ->sum(\DB::raw('cantidad'));
+            ->sum(\DB::raw('cantidad * precio'));
     }
 
     private function topProductos(string $mes, int $anno, int $limit = 5)

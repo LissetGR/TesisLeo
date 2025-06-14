@@ -23,7 +23,7 @@ class StoreProduct extends FormRequest
     {
         return [
             'nombre'=> 'string|required|min:3',
-            'u_medida'=> 'string|required',
+            'u_medida'=> ['required', 'string', 'regex:/^[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+$/'],
             'photo'=>'image'
         ];
     }
@@ -34,6 +34,21 @@ class StoreProduct extends FormRequest
           'nombre'=> 'nombre del producto',
            'u_medida'=> 'unidad de medida del producto',
 
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'nombre.required' => 'El :attribute es obligatorio.',
+            'nombre.string' => 'El :attribute debe ser una cadena de texto.',
+            'nombre.min' => 'El :attribute debe tener al menos :min caracteres.',
+
+            'u_medida.required' => 'La :attribute es obligatoria.',
+            'u_medida.string' => 'La :attribute debe ser una cadena de texto.',
+            'u_medida.regex' => 'La :attribute solo puede contener letras y espacios. No se permiten números ni símbolos.',
+
+            'photo.image' => 'La foto debe ser un archivo de imagen válido.',
         ];
     }
 }

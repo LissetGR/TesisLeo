@@ -14,12 +14,23 @@ use App\Http\Requests\UpdatePlan;
 class PlanController extends Controller
 {
 
-    public function create()
+    public function create(Request $request)
     {
-        $anno= Carbon::now()->year;
-        $productos= Producto::all();
-        return view ('plan.create',['productos'=> $productos,
-        'anno'=>$anno]);
+        $producto_id = $request->input('producto_id');
+        $mes = $request->input('mes');
+        $anno = $request->input('year', now()->year);
+
+        $producto = Producto::findOrFail($producto_id);
+        $productos = Producto::all();
+
+
+        return view('plan.create', [
+            'producto' => $producto,
+            'productos' => $productos,
+            'producto_id' => $producto_id,
+            'mes' => $mes,
+            'anno' => $anno,
+        ]);
     }
 
     public function show($id){
@@ -29,24 +40,22 @@ class PlanController extends Controller
     public function store(Request $request)
     {
         if ($request->has('productos')) {
+            // Manejo de múltiples productos
             $productos = json_decode($request->productos, true);
-
+    
             if (is_array($productos)) {
                 foreach ($productos as $producto) {
-                    // Verificar si ya existe un plan para el mismo mes, año y producto
                     $existingPlan = Plan::where('mes', $producto['mes'])
-                                        ->where('anno', $producto['anno'])
-                                        ->where('productos_id', $producto['productos_id'])
-                                        ->first();
-
+                        ->where('anno', $producto['anno'])
+                        ->where('productos_id', $producto['productos_id'])
+                        ->first();
+    
                     if ($existingPlan) {
-                        // Si ya existe, actualiza los valores en lugar de crear un nuevo plan
                         $existingPlan->update([
                             'cantidad' => $producto['cantidad'],
                             'precio' => $producto['precio']
                         ]);
                     } else {
-                        // Si no existe, crear un nuevo plan
                         Plan::create([
                             'mes' => $producto['mes'],
                             'anno' => $producto['anno'],
@@ -56,13 +65,42 @@ class PlanController extends Controller
                         ]);
                     }
                 }
-
-                return redirect()->route('plan.index')->with('success', 'Plan creado o actualizado con éxito.');
+    
+                return redirect()->route('plan.index')->with('success', 'Planes creados o actualizados con éxito.');
             } else {
                 return back()->withErrors(['productos' => 'Los productos no se enviaron correctamente.']);
             }
         } else {
-            return back()->withErrors(['productos' => 'No se recibieron productos.']);
+            // Manejo de un solo producto
+            $request->validate([
+                'producto_id' => 'required|exists:productos,id',
+                'mes' => 'required|string',
+                'year' => 'required|integer',
+                'cantidad' => 'required|numeric',
+                'precio' => 'required|numeric',
+            ]);
+    
+            $existingPlan = Plan::where('mes', $request->mes)
+                ->where('anno', $request->year)
+                ->where('productos_id', $request->producto_id)
+                ->first();
+    
+            if ($existingPlan) {
+                $existingPlan->update([
+                    'cantidad' => $request->cantidad,
+                    'precio' => $request->precio
+                ]);
+            } else {
+                Plan::create([
+                    'mes' => $request->mes,
+                    'anno' => $request->year,
+                    'productos_id' => $request->producto_id,
+                    'cantidad' => $request->cantidad,
+                    'precio' => $request->precio
+                ]);
+            }
+    
+            return redirect()->route('plan.index')->with('success', 'Plan creado o actualizado con éxito.');
         }
     }
 

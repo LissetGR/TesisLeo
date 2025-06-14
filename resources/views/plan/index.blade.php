@@ -14,8 +14,6 @@
                 {{ __('Plan') }}
             </h2>
             <div class="flex items-center gap-4">
-                <a href="plan/create" class="btn btn-m btn-primary">+</a>
-
                 <form method="GET" action="{{ route('plan.index') }}" class="flex items-center gap-4">
                     <!-- Año -->
                     <div class="flex flex-col">
@@ -47,9 +45,6 @@
                     <div class="p-4 mb-6 bg-gray-100 rounded-lg">
                         <h3 class="mb-3 text-lg font-semibold mb-0">Totales Anuales</h3>
                         <div class="grid grid-cols-2 gap-4">
-                            <div>
-                                <p><strong>Cantidad Total:</strong> {{ $totalesAnuales->total_cantidad }}</p>
-                            </div>
                             <div>
                                 <p><strong>Precio Total:</strong> ${{ number_format($totalesAnuales->total_precio, 2) }}</p>
                             </div>
@@ -127,7 +122,14 @@
                                                     </div>
                                                 </div>
                                             @else
-                                                -
+                                            <a href="{{ route('plan.create', [
+                                                    'producto_id' => $p->id,
+                                                    'mes' => Str::lower($mes),
+                                                    'year' => $year ?? date('Y')
+                                                ]) }}"
+                                                class="btn btn-xs btn-outline btn-success">
+                                                    +
+                                                </a>
                                             @endif
                                         </td>
                                     @endforeach

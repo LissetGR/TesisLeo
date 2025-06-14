@@ -29,8 +29,8 @@ class EstadisticasExport implements FromCollection, WithHeadings, WithStyles
             return [
                 'Mes' => $item['mes'],
                 'Producto / Detalle' => $item['producto'],
-                'Plan' => round($item['plan'], 2),
-                'Real' => round($item['real'], 2),
+                'Plan ($)' => round($item['plan'], 2),
+                'Real ($)' => round($item['real'], 2),
                 'Cumplimiento (%)' => $item['cumplimiento'],
             ];
         });
@@ -41,8 +41,8 @@ class EstadisticasExport implements FromCollection, WithHeadings, WithStyles
         return [
             'Mes',
             'Producto / Detalle',
-            'Plan',
-            'Real',
+            'Plan ($)',
+            'Real ($)',
             'Cumplimiento (%)'
         ];
     }

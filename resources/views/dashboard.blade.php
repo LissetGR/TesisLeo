@@ -1,5 +1,5 @@
 @php
-$datos = ['Productos', 'Real', 'Plan', 'Estadisticas'];
+$datos = ['Productos', 'Plan', 'Real', 'Estadisticas'];
 $colors = ['border-blue-500', 'border-green-500', 'border-yellow-500', 'border-purple-500'];
 @endphp
 

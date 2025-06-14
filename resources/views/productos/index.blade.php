@@ -56,6 +56,7 @@
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-error btn-xs">Eliminar</button>
                                         </form>
+
                                     </td>
                                 </tr>
                             @endforeach

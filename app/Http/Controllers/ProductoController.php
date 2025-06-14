@@ -26,7 +26,7 @@ class ProductoController extends Controller
             'photo'=> $path
         ]);
         }else{
-            $producto= Producto::create($request->all());
+            $producto= Producto::create($request->validated());
         }
        return redirect()->route('productos.index', $producto);
     }

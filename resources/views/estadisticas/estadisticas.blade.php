@@ -51,8 +51,7 @@
                             <!-- head -->
                             <thead>
                                 <tr>
-                                    <th>Mes</th>
-                                    <th>Importe</th>
+                                    <th>Mes</th>                   
                                     <th>Plan</th>
                                     <th>Real</th>
                                     <th>Top Producto</th>
@@ -61,8 +60,7 @@
                             <tbody>
                                 @foreach ($estadisticas as $dato)
                                 <tr>
-                                    <td>{{ $dato['mes'] }}</td>
-                                    <td>{{ number_format($dato['importe'], 2) }}</td>
+                                    <td>{{ $dato['mes'] }}</td>                              
                                     <td>{{ number_format($dato['importe_plan'], 2) }}</td>
                                     <td>{{ number_format($dato['importe_real'], 2) }}</td>
                                     <td>

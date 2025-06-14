@@ -13,12 +13,21 @@ use SessionUpdateTimestampHandlerInterface;
 
 class RealController extends Controller
 {
-    public function create()
-    {
-        $anno= Carbon::now()->year;
+    public function create(Request $request)
+    {   
+        $producto_id = $request->input('producto_id');
+        $mes = $request->input('mes');
+        $anno = $request->input('year', now()->year);
         $productos= Producto::all();
-        return view ('real.create',['productos'=> $productos,
-        'anno'=>$anno]);
+        $producto = Producto::findOrFail($producto_id);
+ 
+        return view ('real.create',
+        ['productos'=> $productos,
+         'producto' => $producto,
+         'producto_id' => $producto_id,
+          'anno'=>$anno,
+          'mes' => $mes
+        ]);
         ;
     }
     public function show($id){

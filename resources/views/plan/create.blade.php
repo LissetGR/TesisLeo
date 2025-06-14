@@ -29,50 +29,42 @@
                         <div class="flex gap-10">
                             <div>
                                 <label for="mes">Mes</label>
-                                <select class="select select-primary w-full max-w-xs" name="mes" id="mes" required>
-                                    @foreach ($meses as $mes)
-                                        <option value="{{ strtolower($mes) }}">{{ $mes }}</option>
-                                    @endforeach
+                                <select class="select select-primary w-full max-w-xs" name="mes" id="mes" required>   
+                                   <option value="{{ strtolower($mes) }}">{{ $mes }}</option>                                  
                                 </select>
                             </div>
 
                             <div>
                                 <label for="anno">Año</label>
                                 <select class="select select-primary w-full max-w-xs" name="anno" id="anno" required>
-                                    @for ($i = now()->year; $i > now()->year - 20; $i--)
-                                        <option value="{{ $i }}">{{ $i }}</option>
-                                    @endfor
+                                
+                                        <option value="{{$anno}}">{{ $anno }}</option>
+                   
                                 </select>
                             </div>
                         </div>
 
                         {{-- Sección de Productos Dinámicos --}}
                         <div class="mt-6">
-                            <h2 class="font-semibold text-lg">Productos</h2>
-                            <div id="productos-container">
-                                <div class="producto-item flex gap-4 mt-4">
-                                    <select class="select select-primary w-full max-w-xs" name="productos_id[]" required>
-                                        <option value="">Seleccione el producto</option>
-                                        @foreach ($productos as $producto)
-                                            <option value="{{ $producto->id }}">{{ $producto->nombre }}</option>
-                                        @endforeach
-                                    </select>
+                            <h2 class="font-semibold text-lg">Producto</h2>
+                            <div class="producto-item flex gap-4 mt-4">
+                                <input type="text" class="input input-bordered input-primary w-full max-w-xs bg-gray-100" 
+                                    value="{{ $producto->nombre }}" disabled>
+                                <input type="hidden" name="productos_id[]" value="{{ $producto->id }}">
 
-                                    <input type="number" name="cantidad[]" placeholder="Cantidad" required
-                                        class="input input-bordered input-primary w-28" />
+                                <input type="number" name="cantidad[]" placeholder="Cantidad" required
+                                    class="input input-bordered input-primary w-28" />
 
-                                    <input type="number" name="precio[]" placeholder="Precio" required
-                                        class="input input-bordered input-primary w-28" />
-
-                                    <button type="button" class="btn btn-error btn-xs remove-product">Eliminar</button>
-                                </div>
+                                <input type="number" name="precio[]" placeholder="Precio" required
+                                    step="0.01" inputmode="decimal" lang="es" class="input input-bordered input-primary w-28" />
                             </div>
+                        </div>
 
-                            <button type="button" id="add-product" class="btn btn-secondary mt-4">Agregar Producto</button>
+                            <!-- <button type="button" id="add-product" class="btn btn-secondary mt-4">Agregar Producto</button> -->
                         </div>
 
                         <div class="flex justify-center mt-10">
-                            <button type="submit" class="btn btn-primary mr-6">Aceptar</button>
+                            <button type="submit" class="btn btn-primary mr-6" >Aceptar</button>
                             <a href="{{ route('plan.index') }}" class="btn btn-glass">Cancelar</a>
                         </div>
                     </form>
@@ -83,29 +75,6 @@
 
     {{-- Script para manejar los productos dinámicos --}}
     <script>
-        document.getElementById('add-product').addEventListener('click', function () {
-            let container = document.getElementById('productos-container');
-            let newProduct = document.createElement('div');
-            newProduct.classList.add('producto-item', 'flex', 'gap-4', 'mt-4');
-            newProduct.innerHTML = `
-                <select class="select select-primary w-full max-w-xs" name="productos_id[]" required>
-                    <option value="">Seleccione el producto</option>
-                    @foreach ($productos as $producto)
-                        <option value="{{ $producto->id }}">{{ $producto->nombre }}</option>
-                    @endforeach
-                </select>
-
-                <input type="number" name="cantidad[]" placeholder="Cantidad" required
-                    class="input input-bordered input-primary w-28" />
-
-                <input type="number" name="precio[]" placeholder="Precio" required
-                    class="input input-bordered input-primary w-28" />
-
-                <button type="button" class="btn btn-error btn-xs remove-product">Eliminar</button>
-            `;
-            container.appendChild(newProduct);
-        });
-
         document.addEventListener('click', function (event) {
             if (event.target.classList.contains('remove-product')) {
                 event.target.parentElement.remove();
@@ -123,7 +92,7 @@
             let anno = document.getElementById('anno').value;
 
             document.querySelectorAll('.producto-item').forEach(item => {
-                let productoId = item.querySelector('select[name="productos_id[]"]').value;
+                let productoId = item.querySelector('input[name="productos_id[]"]').value;
                 let cantidad = item.querySelector('input[name="cantidad[]"]').value;
                 let precio = item.querySelector('input[name="precio[]"]').value;
 

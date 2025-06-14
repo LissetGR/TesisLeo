@@ -23,19 +23,29 @@
                             <input type="text" name="nombre" id="nombre" required placeholder="Escribe aquí"
                                 class="input input-bordered input-primary w-full max-w-xs"
                                 value="{{ old('nombre', $producto->nombre ?? '') }}"
-                                />
+                            />
+                            @error('nombre')
+                                <p class="text-red-500 max-w-xs text-sm mt-1">{{ $message }}</p>
+                            @enderror
                         </div>
+
                         <div class="mt-6">
                             <label for="u_medida">Unidad de medida</label>
                             <input type="text" name="u_medida" id="u_medida" required placeholder="Escribe aquí"
                                 class="input input-bordered input-primary w-full max-w-xs"
                                 value="{{ old('u_medida', $producto->u_medida ?? '') }}"
-                                />
+                            />
+                            @error('u_medida')
+                                <p class="text-red-500 max-w-xs text-sm mt-1">{{ $message }}</p>
+                            @enderror
                         </div>
+
                         <div class="mt-6">
                             <input type="file" name="photo" id="photo"
                                 class="file-input file-input-bordered file-input-primary w-full max-w-xs" />
-
+                            @error('photo')
+                                <p class="text-red-500 max-w-xs text-sm mt-1">{{ $message }}</p>
+                            @enderror
                         </div>
 
                         <div class="flex justify-end mt-10">
